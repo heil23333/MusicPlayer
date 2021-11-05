@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
     private MyViewModel viewModel;
     private RecyclerView recyclerView;
     private MyAdapter adapter;
-    private int currentMusicId = -1;//当前播放的音乐id
+    private int currentMusicId = -1, position = -1;//当前播放的音乐id和list index
     private MediaPlayer player;
     private TextView name, duration, currentTime, musicArtist;
     private ProgressBar progressBar;
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
     }
 
     private void updateControlUi(int position) {
+        this.position = position;
         currentMusicId = viewModel.getMusicDates().getValue().get(position).getMusicId();
         name.setText(viewModel.getMusicDates().getValue().get(position).getName());
         duration.setText(MyAdapter.getDuration(viewModel.getMusicDates().getValue().get(position).getDuration()));
@@ -154,9 +155,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
                 }
             } else {//切歌
                 try {
-                    player.reset();
-                    player.setDataSource(this, uri);
-                    player.prepare();
+                    updatePlayer(position);
                     startPlay();
                     updateControlUi(position);
                 } catch (IOException e) {
@@ -167,13 +166,37 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
         }
     }
 
+    private void updatePlayer(int position) throws IOException {
+        Uri uri = Uri.parse(viewModel.getMusicDates().getValue().get(position).getUri());
+        player.reset();
+        player.setDataSource(this, uri);
+        player.prepare();
+    }
+
     private void pause() {
         player.pause();
         mPlayerThread.setPlay(false);
     }
 
     private void startPlay() {
-        System.out.println("hl-------startPlay");
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                if (position < viewModel.getMusicDates().getValue().size() -1) {
+                    position ++;
+
+                } else {
+                    position = 0;
+                }
+                updateControlUi(position);
+                try {
+                    updatePlayer(position);
+                    startPlay();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         player.start();
         if (playThread == null) {
             mPlayerThread = new PlayerThread(new WeakReference<>(this));
@@ -181,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
             playThread.start();
         } else {
             mPlayerThread.setPlay(true);
-            System.out.println("hl------notifyAll");
         }
     }
 
