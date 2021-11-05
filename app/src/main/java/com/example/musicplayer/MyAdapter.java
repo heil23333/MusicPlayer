@@ -3,7 +3,6 @@ package com.example.musicplayer;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,9 +75,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.name);
-            artist = itemView.findViewById(R.id.artist);
-            duration = itemView.findViewById(R.id.duration);
+            name = itemView.findViewById(R.id.music_name);
+            artist = itemView.findViewById(R.id.music_artist);
+            duration = itemView.findViewById(R.id.music_duration);
             cover = itemView.findViewById(R.id.cover);
         }
     }
@@ -87,7 +86,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         void onItemClick(View view, int position);
     }
 
-    private void loadingCover(String path, ImageView imageView) {//加载歌曲封面
+    public static void loadingCover(String path, ImageView imageView) {//加载歌曲封面
         MediaMetadataRetriever mediaMetadataRetriever=new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(path);
         byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
@@ -95,7 +94,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         imageView.setImageBitmap(bitmap);
     }
 
-    private String getDuration(int duration) {
+    public static String getDuration(int duration) {
         String time = "" ;
         long minute = duration / 60000 ;
         long seconds = duration % 60000 ;

@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/music_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="别找我麻烦"
@@ -26,26 +26,26 @@
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/cover"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/artist"/>
+        app:layout_constraintBottom_toTopOf="@+id/music_artist"/>
 
     <TextView
-        android:id="@+id/artist"
+        android:id="@+id/music_artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="刘瑞琪"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/name"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintStart_toStartOf="@id/music_name"
+        app:layout_constraintTop_toBottomOf="@+id/music_name" />
 
     <TextView
-        android:id="@+id/duration"
+        android:id="@+id/music_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="4:30"
         android:textSize="15sp"
         android:layout_marginStart="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/artist"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintStart_toEndOf="@id/music_artist"
+        app:layout_constraintTop_toBottomOf="@+id/music_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

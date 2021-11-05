@@ -49,7 +49,7 @@ public class MusicDates {
         this.album = album;// 专辑
         this.artist = artist;// 作者
         this.size = size;// 大小
-        this.duration = duration;// 时长
+        this.duration = duration;// 时长(毫秒)
         this.uri = uri;
     }
 }
