@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
     private int currentMusicId = -1, position = -1;//当前播放的音乐id和list index
     private MediaPlayer player;
     private TextView name, duration, currentTime, musicArtist;
-    private ProgressBar progressBar;
+    private SeekBar seekBar;
     private ImageView playState;
     private MyHandler handler;
     private Thread playThread;
@@ -56,7 +56,28 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
         duration = findViewById(R.id.music_duration);
         currentTime = findViewById(R.id.current_time);
         musicArtist = findViewById(R.id.music_artist);
-        progressBar = findViewById(R.id.progressBar);
+        seekBar = findViewById(R.id.seek_bar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (player == null) {
+                    return;
+                }
+                if (fromUser) {
+                    player.seekTo(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         playState = findViewById(R.id.play_state);
         playState.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
         name.setText(viewModel.getMusicDates().getValue().get(position).getName());
         duration.setText(MyAdapter.getDuration(viewModel.getMusicDates().getValue().get(position).getDuration()));
         musicArtist.setText(viewModel.getMusicDates().getValue().get(position).getArtist());
-        progressBar.setMax(viewModel.getMusicDates().getValue().get(position).getDuration());
+        seekBar.setMax(viewModel.getMusicDates().getValue().get(position).getDuration());
         MyAdapter.loadingCover(viewModel.getMusicDates().getValue().get(position).getPath(), playState);
     }
 
@@ -234,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
                     MainActivity activity = mWeakReference.get();
                     if (activity != null) {
                         MediaPlayer player = activity.player;
-                        activity.progressBar.setProgress(player.getCurrentPosition());
+                        activity.seekBar.setProgress(player.getCurrentPosition());
                         activity.currentTime.setText(MyAdapter.getDuration(player.getCurrentPosition()));
                     }
                     break;
