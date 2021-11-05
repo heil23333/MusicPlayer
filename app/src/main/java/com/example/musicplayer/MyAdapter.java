@@ -1,5 +1,6 @@
 package com.example.musicplayer;
 
+import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    private OnClickListener listener;
 
     private List<MusicDates> musicDates;
 
@@ -24,6 +26,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             this.musicDates.clear();
             this.musicDates.addAll(musicDates);
         }
+    }
+
+    public void setListener(OnClickListener listener) {
+        this.listener = listener;
     }
 
     public MyAdapter(List<MusicDates> musicDates) {
@@ -44,6 +50,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.name.setText(musicDates.get(position).getName());
         holder.artist.setText(musicDates.get(position).getArtist());
         holder.duration.setText(musicDates.get(position).getDuration() + "");
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(v, holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -63,5 +77,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             duration = itemView.findViewById(R.id.duration);
             cover = itemView.findViewById(R.id.cover);
         }
+    }
+
+    public interface OnClickListener {
+        void onItemClick(View view, int position);
     }
 }

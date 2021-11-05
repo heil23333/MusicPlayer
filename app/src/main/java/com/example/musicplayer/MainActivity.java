@@ -12,16 +12,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Toast;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements MyAdapter.OnClickListener {
 
     private MyViewModel viewModel;
     private RecyclerView recyclerView;
     private MyAdapter adapter;
+    private boolean start = false;//是否在播放
+    private int currentMusicId = -1;//当前播放的音乐id
+    private MediaPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MyViewModel.class);
         recyclerView = findViewById(R.id.recyclerView);
         adapter = new MyAdapter(viewModel.getMusicDates().getValue());
+        adapter.setListener(this);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -62,13 +74,25 @@ public class MainActivity extends AppCompatActivity {
         } else {
             requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
-
-
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    public void onItemClick(View view, int position) {
+        Uri uri = Uri.withAppendedPath(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, String.valueOf(viewModel.getMusicDates().getValue().get(position).getMusicId()));
+        if (player == null) {
+            player = new MediaPlayer();
+            try {
+                player.setDataSource(this, uri);
+                player.prepare();
+                player.start();
+                currentMusicId = viewModel.getMusicDates().getValue().get(position).getMusicId();
+                start = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+        }
 
     }
 }

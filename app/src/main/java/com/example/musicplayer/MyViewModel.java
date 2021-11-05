@@ -69,7 +69,9 @@ public class MyViewModel extends AndroidViewModel {
                 String artist = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)); // 作者
                 long size = c.getLong(c.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));// 大小
                 int duration = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));// 时长
-                musicDates = new MusicDates(path, musicId, name, album, artist, size, duration);
+                String uri = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                musicDates = new MusicDates(path, musicId, name, album, artist, size, duration, uri);
+
                 list.add(musicDates);
             }
         } catch (Exception e) {
