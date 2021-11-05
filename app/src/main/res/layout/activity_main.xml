@@ -48,8 +48,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="无正在播放的音乐"
-            android:textSize="20dp"
+            android:text="@string/default_music_name"
+            android:textSize="@dimen/music_name_font_size"
             android:textColor="@color/white"
             android:id="@+id/music_name"
             app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/default_time"
             android:textColor="@color/white"
             app:layout_constraintStart_toEndOf="@id/play_state"
             app:layout_constraintTop_toBottomOf="@+id/seek_bar"
@@ -68,7 +68,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/default_time"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/seek_bar"

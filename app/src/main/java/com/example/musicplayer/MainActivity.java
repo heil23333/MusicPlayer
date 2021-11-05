@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
                         viewModel.loadMusics();
                         viewModel.getMusicDates();
                     } else {
-                        Toast.makeText(MainActivity.this, "无权限, 无法显示音乐列表", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, R.string.no_permission, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
             viewModel.getMusicDates();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-                Toast.makeText(MainActivity.this, "无权限, 无法显示音乐列表", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, R.string.no_permission, Toast.LENGTH_LONG).show();
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
@@ -144,9 +144,14 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
     }
 
     private void updateControlUi(int position) {
+        String s = viewModel.getMusicDates().getValue().get(position).getName();
+        if (s.length() > 20) {
+            s = s.substring(0, 20);
+            s += "...";
+        }
         this.position = position;
         currentMusicId = viewModel.getMusicDates().getValue().get(position).getMusicId();
-        name.setText(viewModel.getMusicDates().getValue().get(position).getName());
+        name.setText(s);
         duration.setText(MyAdapter.getDuration(viewModel.getMusicDates().getValue().get(position).getDuration()));
         musicArtist.setText(viewModel.getMusicDates().getValue().get(position).getArtist());
         seekBar.setMax(viewModel.getMusicDates().getValue().get(position).getDuration());
