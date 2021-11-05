@@ -140,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
             try {
                 player.setDataSource(this, uri);
                 player.prepare();
-                startPlay();
                 updateControlUi(position);
+                startPlay();
             } catch (IOException e) {
                 e.printStackTrace();
                 player.release();
@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
 
     private void pause() {
         player.pause();
+        playState.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_circle_filled_24));
         mPlayerThread.setPlay(false);
     }
 
@@ -198,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
             }
         });
         player.start();
+        MyAdapter.loadingCover(viewModel.getMusicDates().getValue().get(position).getPath(), playState);
         if (playThread == null) {
             mPlayerThread = new PlayerThread(new WeakReference<>(this));
             playThread = new Thread(mPlayerThread);
@@ -205,6 +207,17 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
         } else {
             mPlayerThread.setPlay(true);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (player != null) {
+            player.release();
+        }
+        if (playThread != null) {
+            playThread.stop();
+        }
+        super.onDestroy();
     }
 
     private static class MyHandler extends Handler {
