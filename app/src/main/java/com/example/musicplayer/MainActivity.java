@@ -25,7 +25,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 
 
-public class MainActivity extends AppCompatActivity implements MyAdapter.OnClickListener {
+public class MainActivity extends AppCompatActivity implements MyAdapter.OnClickListener, View.OnClickListener {
 
     private MyViewModel viewModel;
     private RecyclerView recyclerView;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
 
     @Override
     public void onItemClick(View view, int position) {
-        Uri uri = Uri.withAppendedPath(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, String.valueOf(viewModel.getMusicDates().getValue().get(position).getMusicId()));
+        Uri uri = Uri.parse(viewModel.getMusicDates().getValue().get(position).getUri());
         if (player == null) {//第一次点击播放
             player = new MediaPlayer();
             try {
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
                 currentMusicId = viewModel.getMusicDates().getValue().get(position).getMusicId();
             } catch (IOException e) {
                 e.printStackTrace();
+                player.release();
             }
         } else {//切歌或暂停
             if (currentMusicId == viewModel.getMusicDates().getValue().get(position).getMusicId()) {//再点一次暂停
@@ -97,18 +98,21 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
                 }
             } else {//切歌
                 try {
-                    player.stop();
-                    player.release();
-                    player = new MediaPlayer();
+                    player.reset();
                     player.setDataSource(this, uri);
                     player.prepare();
                     player.start();
+                    currentMusicId = viewModel.getMusicDates().getValue().get(position).getMusicId();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    player.release();
                 }
-
             }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
 
     }
 }
