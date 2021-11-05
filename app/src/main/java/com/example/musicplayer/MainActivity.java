@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
     private MyViewModel viewModel;
     private RecyclerView recyclerView;
     private MyAdapter adapter;
-    private boolean start = false;//是否在播放
     private int currentMusicId = -1;//当前播放的音乐id
     private MediaPlayer player;
 
@@ -79,19 +78,36 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnClick
     @Override
     public void onItemClick(View view, int position) {
         Uri uri = Uri.withAppendedPath(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, String.valueOf(viewModel.getMusicDates().getValue().get(position).getMusicId()));
-        if (player == null) {
+        if (player == null) {//第一次点击播放
             player = new MediaPlayer();
             try {
                 player.setDataSource(this, uri);
                 player.prepare();
                 player.start();
                 currentMusicId = viewModel.getMusicDates().getValue().get(position).getMusicId();
-                start = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
+        } else {//切歌或暂停
+            if (currentMusicId == viewModel.getMusicDates().getValue().get(position).getMusicId()) {//再点一次暂停
+                if (player.isPlaying()) {
+                    player.pause();
+                } else {
+                    player.start();
+                }
+            } else {//切歌
+                try {
+                    player.stop();
+                    player.release();
+                    player = new MediaPlayer();
+                    player.setDataSource(this, uri);
+                    player.prepare();
+                    player.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
+            }
         }
 
     }
