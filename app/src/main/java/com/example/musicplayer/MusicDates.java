@@ -8,6 +8,7 @@ public class MusicDates {
     private String artist;
     private long size;
     private int duration;
+    private String uri;
 
     public String getPath() {
         return path;
@@ -37,7 +38,11 @@ public class MusicDates {
         return duration;
     }
 
-    public MusicDates(String path, int musicId, String name, String album, String artist, long size, int duration) {
+    public String getUri() {
+        return uri;
+    }
+
+    public MusicDates(String path, int musicId, String name, String album, String artist, long size, int duration, String uri) {
         this.path = path;// 路径
         this.musicId = musicId;// 歌曲的id
         this.name = name;// 歌曲名
@@ -45,5 +50,6 @@ public class MusicDates {
         this.artist = artist;// 作者
         this.size = size;// 大小
         this.duration = duration;// 时长
+        this.uri = uri;
     }
 }
